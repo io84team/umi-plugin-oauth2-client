@@ -99,7 +99,7 @@ const useToken = (history: any, codePair: OAuth2Client.CodePair) => {
 
 const Provider: React.FC<Props & IRouteComponentProps> = props => {
     const { children, history } = props;
-    const { initialState, setInitialState } = useModel('@@initialState');
+    const { setInitialState } = useModel('@@initialState');
     const useRuntimeConfig =
         plugin.applyPlugins({
             key: "initialStateConfig",
@@ -119,21 +119,22 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
     const { userInfo, setUserInfo } = useUserInfo(token);
 
     const getSignUri: string = () => {
-        if (codePair !== undefined) {
-            const { codeChallenge } = codePair;
-            const ssoUri = OAuth2.code.getUri({
-                state: codeChallenge,
-                query: {
-                    code_challenge: codeChallenge,
-                    code_challenge_method: codeChallengeMethod,
-                }
-            });
-            setCodePair(codePair);
-            setTargetUri(history.location.pathname);
+        let newCodePair = codePair || create();
 
-            return ssoUri;
-        }
-        return '/';
+        const { codeChallenge } = newCodePair;
+
+        const ssoUri = OAuth2.code.getUri({
+            state: codeChallenge,
+            query: {
+                code_challenge: codeChallenge,
+                code_challenge_method: codeChallengeMethod,
+            }
+        });
+
+        setCodePair(newCodePair);
+        setTargetUri(history.location.pathname);
+
+        return ssoUri;
     }
 
     const signIn = () => {
@@ -144,10 +145,10 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
         setToken(undefined);
         setUserInfo(undefined);
 
-        setInitialState({
-            ...initialState,
+        setInitialState((preState)=>({
+            ...preState,
             currentUser: undefined,
-        });
+        }));
 
         history.push(homePagePath);
     };
@@ -162,10 +163,12 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
                 }
             }
         };
-        setInitialState({
-            ...initialState,
+
+        setInitialState((preState)=>({
+            ...preState,
             currentUser: userInfo,
-        });
+        }));
+
     }, [token, userInfo]);
 
     if (isRedirectPath(history.location.pathname)) {
