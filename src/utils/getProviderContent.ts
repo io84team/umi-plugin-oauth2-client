@@ -8,7 +8,6 @@ import { ApplyPluginsType } from 'umi';
 import { create } from 'pkce';
 import { OAuth2UserContext } from '../core/umiExports';
 import {
-    useModel,
     plugin,
 } from '../core/umiExports';
 
@@ -99,7 +98,6 @@ const useToken = (history: any, codePair: OAuth2Client.CodePair) => {
 
 const Provider: React.FC<Props & IRouteComponentProps> = props => {
     const { children, history } = props;
-    const { setInitialState } = useModel('@@initialState');
     const useRuntimeConfig =
         plugin.applyPlugins({
             key: "initialStateConfig",
@@ -145,11 +143,6 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
         setToken(undefined);
         setUserInfo(undefined);
 
-        setInitialState((preState)=>({
-            ...preState,
-            currentUser: undefined,
-        }));
-
         history.push(homePagePath);
     };
 
@@ -163,11 +156,6 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
                 }
             }
         };
-
-        setInitialState((preState)=>({
-            ...preState,
-            currentUser: userInfo,
-        }));
 
     }, [token, userInfo]);
 

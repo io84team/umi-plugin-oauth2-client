@@ -1,11 +1,8 @@
 import React from 'react';
 import styles from './index.css';
-import { useModel, Link, OAuth2UserContext } from 'umi';
+import { Link, OAuth2UserContext } from 'umi';
 
 const User: React.FC = () => {
-    const { initialState } = useModel('@@initialState');
-    console.table(initialState);
-
     return (
         <OAuth2UserContext.Consumer>
             {({ user, token, signOut }) => {

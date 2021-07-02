@@ -2,9 +2,9 @@ import { defineConfig } from 'umi';
 
 export default defineConfig({
     plugins: [
-        require.resolve('../lib'),
         require.resolve('@umijs/plugin-initial-state'),
         require.resolve('@umijs/plugin-model'),
+        require.resolve('../lib'),
     ],
     oauth2Client: {
         clientId: '92bc9822-95f4-40f8-b2cf-69fbfa3afa12',
