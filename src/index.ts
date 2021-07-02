@@ -41,7 +41,6 @@ export default (api: IApi) => {
 
     api.addRuntimePlugin({
         fn: () => [join(umiTmpDir!, `${PLUGIN_DIR}/rootContainer.ts`)],
-        stage: -1,
     });
 
     api.addUmiExports(() => [

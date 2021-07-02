@@ -188,6 +188,7 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
         },
         React.cloneElement(children, {
             ...children.props,
+            routes: props.routes,
         }),
     );
 };
