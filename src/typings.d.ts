@@ -10,6 +10,7 @@ declare namespace OAuth2Client {
         userInfoUri: string;
         homePagePath?: string;
         codeChallengeMethod?: string;
+        userSignOutUri?: string;
     };
 
     type CodePair = {

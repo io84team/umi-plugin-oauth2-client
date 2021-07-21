@@ -12,6 +12,7 @@ export default defineConfig({
         authorizationUri: 'https://account.apigg.com/oauth/authorize',
         redirectUri: 'http://dev.apigg.net:8000/oauth2/callback',
         userInfoUri: 'https://account.apigg.com/api/user',
+        userSignOutUri: 'https://account.apigg.com/api/signout',
         homePagePath: '/',
     },
     routes: [

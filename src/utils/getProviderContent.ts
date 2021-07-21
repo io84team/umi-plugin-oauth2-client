@@ -6,10 +6,9 @@ import ClientOAuth2, { Token } from 'client-oauth2';
 import type { IRouteComponentProps } from 'umi';
 import { ApplyPluginsType } from 'umi';
 import { create } from 'pkce';
-import { OAuth2UserContext } from '../core/umiExports';
-import {
-    plugin,
-} from '../core/umiExports';
+import { OAuth2Client, OAuth2UserContext } from '../core/umiExports';
+import { plugin } from '../core/umiExports';
+import { History } from 'history-with-query';
 
 const clientId = '${config.clientId}';
 const accessTokenUri = '${config.accessTokenUri}';
@@ -18,6 +17,7 @@ const redirectUri = '${config.redirectUri}';
 const userInfoUri = '${config.userInfoUri}';
 const homePagePath = '${config.homePagePath || '/'}';
 const codeChallengeMethod = '${config.codeChallengeMethod || 'S256'}';
+const userSignOutUri = '${config.userSignOutUri || ''}';
 
 const tokenKey = 'UMI_OAUTH2_CLIENT_TOKEN_KEY';
 const codePairKey = 'UMI_OAUTH2_CLIENT_CODE_PAIR_KEY';
@@ -38,7 +38,10 @@ const isRedirectPath = (path: string): boolean => {
     return path.length > 1 && redirectUri.indexOf(path) !== -1;
 };
 
-const useUserInfo = (token: OAuth2Client.TokenData) => {
+const useUserInfo = (
+    token: OAuth2Client.TokenData,
+    setToken: (token: OAuth2Client.TokenData) => void,
+) => {
     const [userInfo, setUserInfo] = useState<UserInfo>(undefined);
 
     useEffect(() => {
@@ -55,6 +58,9 @@ const useUserInfo = (token: OAuth2Client.TokenData) => {
                         const user = JSON.parse(res.body);
                         setUserInfo(user);
                     }
+                })
+                .catch(() => {
+                    setToken(undefined);
                 });
         }
     }, [token, userInfo]);
@@ -62,7 +68,13 @@ const useUserInfo = (token: OAuth2Client.TokenData) => {
     return { userInfo, setUserInfo };
 };
 
-const useToken = (history: any, codePair: OAuth2Client.CodePair) => {
+const useToken = (
+    history: History,
+    codePair: OAuth2Client.CodePair
+): {
+    token: OAuth2Client.TokenData;
+    setToken: (token: OAuth2Client.TokenData) => void;
+} => {
     const [token, setToken] = useLocalStorageState<OAuth2Client.TokenData>(
         tokenKey,
         undefined,
@@ -72,6 +84,11 @@ const useToken = (history: any, codePair: OAuth2Client.CodePair) => {
 
     useEffect(() => {
         if (isRedirectPath(history.location.pathname)) {
+            if (history.location.query?.error) {
+                setToken(undefined);
+                return;
+            }
+
             if (token === undefined || (token !== undefined && (new Token(OAuth2, token)).expired())) {
                 const { codeVerifier } = codePair;
 
@@ -114,7 +131,7 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
 
     const { token, setToken } = useToken(history, codePair);
 
-    const { userInfo, setUserInfo } = useUserInfo(token);
+    const { userInfo, setUserInfo } = useUserInfo(token, setToken);
 
     const getSignUri: string = () => {
         let newCodePair = codePair || create();
@@ -139,9 +156,28 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
         window.location.href = getSignUri();
     }
 
+    const ssoSignOut = () => {
+        const tokenObject = new Token(OAuth2, token);
+        const requestObject = tokenObject.sign({
+            method: 'post',
+            url: userSignOutUri,
+        });
+
+        OAuth2.request(
+            requestObject.method,
+            requestObject.url,
+            {},
+            requestObject.headers,
+        ).then(console.info);
+    };
+
     const signOut = () => {
         setToken(undefined);
         setUserInfo(undefined);
+
+        if (userSignOutUri.indexOf('http') !== -1) {
+            ssoSignOut();
+        }
 
         history.push(homePagePath);
     };
@@ -160,6 +196,11 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
     }, [token, userInfo]);
 
     if (isRedirectPath(history.location.pathname)) {
+        if (history.location.query?.error) {
+            return React.createElement(useRuntimeConfig.error, {
+                error: history.location.query?.error,
+            });
+        }
         return useRuntimeConfig.loading;
     }
 
