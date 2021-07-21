@@ -14,6 +14,7 @@ const clientId = '${config.clientId}';
 const accessTokenUri = '${config.accessTokenUri}';
 const authorizationUri = '${config.authorizationUri}';
 const redirectUri = '${config.redirectUri}';
+const scopes = ${JSON.stringify(config.scopes)};
 const userInfoUri = '${config.userInfoUri}';
 const homePagePath = '${config.homePagePath || '/'}';
 const codeChallengeMethod = '${config.codeChallengeMethod || 'S256'}';
@@ -143,7 +144,8 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
             query: {
                 code_challenge: codeChallenge,
                 code_challenge_method: codeChallengeMethod,
-            }
+            },
+            scopes
         });
 
         setCodePair(newCodePair);

@@ -11,6 +11,7 @@ export default defineConfig({
         accessTokenUri: 'https://account.apigg.com/oauth/token',
         authorizationUri: 'https://account.apigg.com/oauth/authorize',
         redirectUri: 'http://dev.apigg.net:8000/oauth2/callback',
+        scopes: ['openid', 'email', 'profile'],
         userInfoUri: 'https://account.apigg.com/api/user',
         userSignOutUri: 'https://account.apigg.com/api/signout',
         homePagePath: '/',

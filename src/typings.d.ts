@@ -7,6 +7,7 @@ declare namespace OAuth2Client {
         accessTokenUri: string;
         authorizationUri: string;
         redirectUri: string;
+        scopes: string[];
         userInfoUri: string;
         homePagePath?: string;
         codeChallengeMethod?: string;
