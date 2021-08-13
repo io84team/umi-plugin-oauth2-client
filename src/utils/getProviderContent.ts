@@ -106,6 +106,11 @@ const useToken = (
                             expires_in: token.data.expires_in,
                         })
                     }
+                })
+                .catch(() => {
+                        setToken(undefined);
+                        window.location.reload();
+                        return;
                 });
             }
         }
@@ -159,18 +164,20 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
     }
 
     const ssoSignOut = () => {
-        const tokenObject = new Token(OAuth2, token);
-        const requestObject = tokenObject.sign({
-            method: 'post',
-            url: userSignOutUri,
-        });
+        if (token) {
+            const tokenObject = new Token(OAuth2, token);
+            const requestObject = tokenObject.sign({
+                method: 'post',
+                url: userSignOutUri,
+            });
 
-        OAuth2.request(
-            requestObject.method,
-            requestObject.url,
-            {},
-            requestObject.headers,
-        ).then(console.info);
+            OAuth2.request(
+                requestObject.method,
+                requestObject.url,
+                {},
+                requestObject.headers,
+            ).then(console.info);
+        }
     };
 
     const signOut = () => {
@@ -191,9 +198,17 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
                 if (userInfo !== undefined) {
                     setTargetUri(undefined);
                     history.push(targetUri);
+                } else {
+                    signOut();
                 }
+            } else {
+                signOut();
             }
         };
+
+        if (token === undefined) {
+            signOut();
+        }
 
     }, [token, userInfo]);
 
