@@ -109,6 +109,7 @@ const useToken = (
                 })
                 .catch(() => {
                         setToken(undefined);
+                        history.push(homePagePath);
                         window.location.reload();
                         return;
                 });
@@ -198,18 +199,9 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
                 if (userInfo !== undefined) {
                     setTargetUri(undefined);
                     history.push(targetUri);
-                } else {
-                    signOut();
                 }
-            } else {
-                signOut();
             }
         };
-
-        if (token === undefined) {
-            signOut();
-        }
-
     }, [token, userInfo]);
 
     if (isRedirectPath(history.location.pathname)) {
