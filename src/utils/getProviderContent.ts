@@ -55,6 +55,10 @@ const useUserInfo = (
 
             OAuth2.request(requestObject.method, requestObject.url, {}, requestObject.headers)
                 .then(res => {
+                    if(res.status === 401) {
+                        throw new Error(401);
+                    }
+
                     if (res.body && JSON.parse(res.body)) {
                         const user = JSON.parse(res.body);
                         setUserInfo(user);
