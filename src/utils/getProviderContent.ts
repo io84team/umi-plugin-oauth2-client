@@ -59,6 +59,10 @@ const useUserInfo = (
                         throw new Error(401);
                     }
 
+                    if(res.status === 500) {
+                        throw new Error(500);
+                    }
+
                     if (res.body && JSON.parse(res.body)) {
                         const user = JSON.parse(res.body);
                         setUserInfo(user);
