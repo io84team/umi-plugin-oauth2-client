@@ -48,13 +48,16 @@ const useUserInfo = (
     useEffect(() => {
         if (token !== undefined && userInfo === undefined) {
             const tokenObject = new Token(OAuth2, token)
+            console.log('tokenObject = ', tokenObject);
             const requestObject = tokenObject.sign({
                 method: 'get',
                 url: userInfoUri,
             });
+            console.log('requestObject = ', requestObject);
 
             OAuth2.request(requestObject.method, requestObject.url, {}, requestObject.headers)
                 .then(res => {
+                    console.log('res = ', res);
                     if(res.status === 401) {
                         throw new Error(401);
                     }
@@ -69,7 +72,9 @@ const useUserInfo = (
                     }
                 })
                 .catch(() => {
+                    console.log('token error, clearing...');
                     setToken(undefined);
+                    console.log('token cleared');
                 });
         }
     }, [token, userInfo]);
