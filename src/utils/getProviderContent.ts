@@ -117,6 +117,7 @@ const useToken = (
                             refresh_token: token.data.refresh_token,
                             token_type: token.data.token_type,
                             expires_in: token.data.expires_in,
+                            id_token: token.data.id_token,
                         })
                     }
                 })

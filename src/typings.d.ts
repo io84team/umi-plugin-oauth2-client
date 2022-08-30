@@ -30,6 +30,7 @@ declare namespace OAuth2Client {
         refresh_token: string;
         token_type: string;
         expires_in: string;
+        id_token: string;
     };
 
     type OAuth2UserContextType = {
