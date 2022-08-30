@@ -2,7 +2,7 @@
     "name": "umi-plugin-oauth2",
     "main": "lib/index.js",
     "description": "OAuth2 Client",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "authors": {
         "name": "aben",
         "email": "me@aben.io"
