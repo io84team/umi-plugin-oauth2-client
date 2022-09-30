@@ -174,6 +174,14 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
         return ssoUri;
     }
 
+    const refresh = (token) => {
+        const tokenObject = OAuth2.createToken(token.access_token, token.refresh_token);
+        tokenObject.refresh().then(res => {
+            console.log('refresh res = ', res);
+            setToken(res.data);
+        });
+    }
+
     const signIn = () => {
         window.location.href = getSignUri();
     }
@@ -236,6 +244,7 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
                 getSignUri: getSignUri,
                 signIn: signIn,
                 signOut: signOut,
+                refresh: refresh,
             }
         },
         React.cloneElement(children, {

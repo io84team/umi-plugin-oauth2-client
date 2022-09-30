@@ -1,12 +1,10 @@
-// ref:
-// - https://umijs.org/plugins/api
 import type { IApi } from '@umijs/types';
 import getRootContainerContent from './utils/getRootContainerContent';
 import getProviderContent from './utils/getProviderContent';
 import getExports from './utils/exports';
 import { join } from 'path';
 
-const PLUGIN_DIR = 'plugin-oauth2-client';
+const PLUGIN_DIR = 'plugin-oauth2';
 
 export default (api: IApi) => {
     const umiTmpDir = api.paths.absTmpPath;

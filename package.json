@@ -7,7 +7,7 @@
         "name": "aben",
         "email": "me@aben.io"
     },
-    "repository": "io84team/umi-plugin-oauth2-client",
+    "repository": "jeff-tian/umi-plugin-oauth2",
     "scripts": {
         "start": "cross-env APP_ROOT=example umi dev",
         "build": "father-build",

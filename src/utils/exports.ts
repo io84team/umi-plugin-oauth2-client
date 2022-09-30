@@ -38,6 +38,7 @@ export declare namespace OAuth2Client {
         getSignUri: () => {};
         signIn: () => {};
         signOut: () => {};
+        refresh: () => {};
     };
 }
 
