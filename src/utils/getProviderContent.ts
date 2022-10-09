@@ -48,12 +48,11 @@ const useUserInfo = (
     useEffect(() => {
         if (token !== undefined && userInfo === undefined) {
             const tokenObject = new Token(OAuth2, token)
-            console.log('tokenObject = ', tokenObject);
+
             const requestObject = tokenObject.sign({
                 method: 'get',
                 url: userInfoUri,
             });
-            console.log('requestObject = ', requestObject);
 
             OAuth2.request(requestObject.method, requestObject.url, {}, requestObject.headers)
                 .then(res => {
@@ -104,11 +103,11 @@ const useToken = (
             }
 
             if (token === undefined || (token !== undefined && (new Token(OAuth2, token)).expired())) {
-                const { codeVerifier } = codePair;
+                console.log('codePair = ', codePair);
 
                 OAuth2.code.getToken(uri, {
                     body: {
-                        code_verifier: codeVerifier,
+                        code_verifier: codePair?.codeVerifier,
                     }
                 }).then(token => {
                     if (token.data) {

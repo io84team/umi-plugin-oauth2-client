@@ -1,11 +1,11 @@
 {
     "name": "umi-plugin-oauth2",
     "main": "lib/index.js",
-    "description": "OAuth2 Client",
+    "description": "OAuth2 Client for umi js app",
     "version": "1.1.0",
     "authors": {
-        "name": "aben",
-        "email": "me@aben.io"
+        "name": "Jeff Tian",
+        "email": "jeff.tian@outlook.com"
     },
     "repository": "jeff-tian/umi-plugin-oauth2",
     "scripts": {
