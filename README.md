@@ -179,7 +179,7 @@ export default Home;
 
 <p align="center">
     <a href="https://www.zhihu.com/consult/people/1073548674713423872" target="blank">
-        <img src="https://urlscan.io/liveshot/?width=400&height=650&url=https%3A%2F%2Fwww.zhihu.com%2Fconsult%2Fpeople%2F1073548674713423872" alt="向我咨询"/>
+        <img src="https://first-go-vercel.vercel.app/api/dynamicimage" alt="向我咨询"/>
     </a>
 </p>
 
