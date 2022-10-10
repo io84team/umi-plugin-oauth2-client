@@ -6,7 +6,7 @@
 >
 > OAuth 2.0 Client for UmiJs based (antd pro, etc) front-end apps.
 
-[![NPM version](https://img.shields.io/npm/v/@jeff-tian/umi-plugin-oauth2.svg?style=flat)](https://npmjs. org/package/@jeff-tian/umi-plugin-oauth2) [![NPM downloads](http://img.shields. io/npm/dm/@jeff-tian/umi-plugin-oauth2.svg?style=flat)](https://npmjs. org/package/@jeff-tian/umi-plugin-oauth2)
+[![NPM version](https://img.shields.io/npm/v/umi-plugin-oauth2.svg?style=flat)](https://npmjs.org/package/umi-plugin-oauth2) [![NPM downloads](http://img.shields.io/npm/dm/umi-plugin-oauth2.svg?style=flat)](https://npmjs.org/package/umi-plugin-oauth2)
 
 ## Why 为什么有这个库
 
@@ -172,6 +172,10 @@ export default Home;
 **基于这种情况，建议不要使用 `umirc.local.[tj]s` 文件，而是命名为 `umirc.work.[tj]s` 之类的文件。这样，就可以自由地使用 `UMI_ENV=work yarn start` 的方式来切换配置了。**
 
 个人觉得多环境配置的多层优先级（以及多层继承关系）设计，是一种过度设计。其实简单一点，根据环境变量去决定，更简单，没有歧义。
+
+## 有任何问题欢迎向我咨询
+
+![向我咨询](https://urlscan.io/liveshot/?width=400&height=650&url=https://www.zhihu.com/consult/people/1073548674713423872)
 
 ## LICENSE
 
