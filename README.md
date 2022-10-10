@@ -177,7 +177,7 @@ export default Home;
 
 ## 有任何问题欢迎向我咨询
 
-[![向我咨询](https://urlscan.io/liveshot/?width=400&height=650&url=https://www.zhihu.com/consult/people/1073548674713423872)](https://www.zhihu.com/consult/people/1073548674713423872)
+[![向我咨询](https://urlscan.io/liveshot/?width=400&height=650&url=https%3A%2F%2Fwww.zhihu.com%2Fconsult%2Fpeople%2F1073548674713423872)](https://www.zhihu.com/consult/people/1073548674713423872)
 
 ## LICENSE
 
