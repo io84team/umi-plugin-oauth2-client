@@ -143,7 +143,9 @@ const Home: React.FC = () => {
 export default Home;
 ```
 
-## 提示
+## 温馨提示
+
+### UmiJs 多环境配置的坑
 
 关于 umi 项目的多环境配置，这里做一些友情提示。由于 umi js 的多环境配置有一些特别，并且文档没有详细描述，导致在实际使用中可能会踩坑（详见： https://github.com/umijs/umi/discussions/8341）。
 
@@ -175,7 +177,7 @@ export default Home;
 
 ## 有任何问题欢迎向我咨询
 
-![向我咨询](https://urlscan.io/liveshot/?width=400&height=650&url=https://www.zhihu.com/consult/people/1073548674713423872)
+[![向我咨询](https://urlscan.io/liveshot/?width=400&height=650&url=https://www.zhihu.com/consult/people/1073548674713423872)](https://www.zhihu.com/consult/people/1073548674713423872)
 
 ## LICENSE
 
