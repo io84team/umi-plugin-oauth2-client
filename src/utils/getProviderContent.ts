@@ -29,15 +29,18 @@ const OAuth2 = new ClientOAuth2({
     accessTokenUri,
     authorizationUri,
     redirectUri,
-});
+}, (method, url, body, headers) => fetch(url, {body: method.toUpperCase() === 'GET' ? undefined : body, method, headers, credentials: "include"}).then(res => res.text().then(body => ({status: res.status, body}))));
 
 interface Props {
     children: React.ReactNode;
 }
 
 const isRedirectPath = (path: string): boolean => {
+    console.log('check if ', path , ' is redirect path...');
     return path.length > 1 && redirectUri.indexOf(path) !== -1;
 };
+
+const isEmptyObject = obj => (Object.keys(obj).length === 0 && obj.constructor === Object) || !obj.access_token;
 
 const useUserInfo = (
     token: OAuth2Client.TokenData,
@@ -46,14 +49,20 @@ const useUserInfo = (
     const [userInfo, setUserInfo] = useState<UserInfo>(undefined);
 
     useEffect(() => {
-        if (token !== undefined && userInfo === undefined) {
+        console.log('token = ', token, ', userInfo = ', userInfo);
+        if (token !== undefined && !isEmptyObject(token) && userInfo === undefined) {
+            console.log('constructing tokenObj...');
+            console.log('OAuth2 = ', OAuth2);
+            console.log('token = ', token);
             const tokenObject = new Token(OAuth2, token)
+            console.log('tokenObject = ', tokenObject);
 
             const requestObject = tokenObject.sign({
                 method: 'get',
                 url: userInfoUri,
             });
 
+            console.log('requesting ', requestObject.url, requestObject.method, requestObject.headers);
             OAuth2.request(requestObject.method, requestObject.url, {}, requestObject.headers)
                 .then(res => {
                     console.log('res = ', res);
@@ -70,8 +79,8 @@ const useUserInfo = (
                         setUserInfo(user);
                     }
                 })
-                .catch(() => {
-                    console.log('token error, clearing...');
+                .catch((err) => {
+                    console.error('token error, clearing...', err);
                     setToken(undefined);
                     console.log('token cleared');
                 });
@@ -96,27 +105,29 @@ const useToken = (
     const uri: string = history.createHref(history.location);
 
     useEffect(() => {
+        console.log('usetoken isRedirectPath(history.location.pathname) = ', isRedirectPath(history.location.pathname));
         if (isRedirectPath(history.location.pathname)) {
             if (history.location.query?.error) {
                 setToken(undefined);
                 return;
             }
 
-            if (token === undefined || (token !== undefined && (new Token(OAuth2, token)).expired())) {
+            if ((token === undefined || isEmptyObject(token)) || (token !== undefined && (new Token(OAuth2, token)).expired())) {
                 console.log('codePair = ', codePair);
 
                 OAuth2.code.getToken(uri, {
                     body: {
                         code_verifier: codePair?.codeVerifier,
                     }
-                }).then(token => {
-                    if (token.data) {
+                }).then(tk => {
+                    console.log('token res = ', tk);
+                    if (tk.data) {
                         setToken({
-                            access_token: token.data.access_token,
-                            refresh_token: token.data.refresh_token,
-                            token_type: token.data.token_type,
-                            expires_in: token.data.expires_in,
-                            id_token: token.data.id_token,
+                            access_token: tk.data.access_token,
+                            refresh_token: tk.data.refresh_token,
+                            token_type: tk.data.token_type,
+                            expires_in: tk.data.expires_in,
+                            id_token: tk.data.id_token,
                         })
                     }
                 })
