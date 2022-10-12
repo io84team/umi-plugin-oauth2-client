@@ -24,12 +24,48 @@ const tokenKey = 'UMI_OAUTH2_CLIENT_TOKEN_KEY';
 const codePairKey = 'UMI_OAUTH2_CLIENT_CODE_PAIR_KEY';
 const uriTargetKey = 'UMI_OAUTH2_CLIENT_URI_TARGET_KEY';
 
-const OAuth2 = new ClientOAuth2({
-    clientId,
-    accessTokenUri,
-    authorizationUri,
-    redirectUri,
-}, (method, url, body, headers) => fetch(url, {body: method.toUpperCase() === 'GET' ? undefined : body, method, headers, credentials: "include"}).then(res => res.text().then(body => ({status: res.status, body}))));
+const stringify = (body, headers) => {
+    if(headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+        return Object.keys(body).map(k => k + '=' + body[k]).join('&');
+    } else {
+        return JSON.stringify(body);
+    }
+}
+
+const OAuth2 = new ClientOAuth2(
+    {
+        clientId,
+        accessTokenUri,
+        authorizationUri,
+        redirectUri,
+    },
+    (method, url, body, headers) => {
+        console.log('body = ', body, headers);
+
+        return fetch(
+            url,
+            {
+                body: method.toUpperCase() === 'GET' ?
+                    undefined :
+                    (Object.keys(body).length === 0 &&
+                        body.constructor === Object ?
+                            undefined :
+                            (typeof body === 'object' ?
+                                stringify(body, headers) :
+                                body
+                            )
+                    ),
+                method,
+                headers,
+                credentials: "include"
+            }
+        ).then(
+            res => res.text().then(
+                body => ({status: res.status, body})
+            )
+        );
+    }
+);
 
 interface Props {
     children: React.ReactNode;
@@ -199,17 +235,28 @@ const Provider: React.FC<Props & IRouteComponentProps> = props => {
     const ssoSignOut = () => {
         if (token) {
             const tokenObject = new Token(OAuth2, token);
+
+            console.log('signing out with ', token, tokenObject);
+
             const requestObject = tokenObject.sign({
                 method: 'post',
                 url: userSignOutUri,
             });
 
+            console.log('requesting ', userSignOutUri);
+
             OAuth2.request(
                 requestObject.method,
                 requestObject.url,
-                {},
-                requestObject.headers,
-            ).then(console.info);
+                {
+                    client_id: clientId,
+                    refresh_token: tokenObject.refreshToken
+                },
+                {
+                    ...requestObject.headers,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+            ).then(console.info).catch(console.error);
         }
     };
 
